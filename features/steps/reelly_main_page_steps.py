@@ -3,45 +3,36 @@ from behave import given, when, then
 from time import sleep
 
 
-EMAIL_INPUT = (By.ID,"email-2")
-PASSWORD_INPUT= (By.CSS_SELECTOR, "input[data-name='Password']")
-LOGIN_BUTTON = (By.CSS_SELECTOR, "[class*='login-button w-button']")
-SETTINGS_MENU=(By.XPATH,"//div[text()='Settings']")
-SETTING_PAGE=(By.CSS_SELECTOR,"body[class='body-setting']")
-OPTIONS_MENU=(By.CSS_SELECTOR,"a[class*='page-setting-block w-inline-block']")
-CONNECT_THE_COMPANY_BTN = (By.XPATH, "//div[text()='Connect the company']")
-
+MAIN_PAGE_URL = "https://soft.reelly.io/sign-in"
+SIGNIN_EMAILADDRESS = "tn.testuser100@gmail.com"
+SIGNIN_PASSWORD = "ABC123"
 
 @given("Open the main page")
-def open_reelly(context):
-    context.app.main_page.open_main_page()
-
+def open_main_page(context):
+    context.app.main_page.open(MAIN_PAGE_URL)
 
 @when('Log in to the page')
-def login(context):
-     context.driver.find_element(*EMAIL_INPUT).send_keys("roshni.mohare@gmail.com")
-     context.driver.find_element(*PASSWORD_INPUT).send_keys("Pass@word1")
-     context.driver.find_element(*LOGIN_BUTTON).click()
-     sleep(3)
+def signin(context):
+    context.app.sign_in_page.login(SIGNIN_EMAILADDRESS, SIGNIN_PASSWORD)
 
 
 @when('Click on settings option')
-def click_settings(context):
-    context.driver.find_element(*SETTINGS_MENU).click()
+def open_settings(context):
+    context.app.main_page.open_settings()
 
 
 @then ('Verify the right page opens')
 def verify_settings(context):
-    context.driver.find_element(*SETTING_PAGE)
+    context.app.settings_page.verify_setting_page()
 
 
 @then ('Verify there are 11 options for the settings')
-def verify_setting_options(context):
-    options = context.driver.find_elements(*OPTIONS_MENU)
+def verify_setting_options(self):
+    options = self.app.settings_page.get_options_link()
     print(options)
     assert len(options) == 12, f' Expected 11 links but found {len(options)}'
 
 
 @then ('Verify “connect the company” button is available')
 def verify_company_button(context):
-    context.driver.find_element(*CONNECT_THE_COMPANY_BTN)
+    context.app.settings_page.verify_company_button()

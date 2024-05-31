@@ -1,5 +1,9 @@
-from pages.base_page import Page
+from pages.base_page import BasePage
+from selenium.webdriver.common.by import By
 
-class MainPage(Page):
-    def open_main_page(self):
-        self.driver.get('https://soft.reelly.io/sign-in')
+class MainPage(BasePage):
+
+    SETTINGS_MENU_ANCHOR_LINK = (By.XPATH, "//a[contains(@href,'/settings')]")
+
+    def open_settings(self):
+        self.click(*self.SETTINGS_MENU_ANCHOR_LINK)
